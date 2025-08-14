@@ -267,7 +267,7 @@
 
 
     el('shareUrl').addEventListener('click',()=>{
-      const encoded = encodeURIComponent(btoa(JSON.stringify(state)));
+      const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
       const url = location.origin + location.pathname + '#s=' + encoded;
       
       // クリップボードにコピーを試行
