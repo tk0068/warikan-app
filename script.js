@@ -50,7 +50,12 @@
     try{
       const hash = location.hash;
       if(hash.startsWith('#s=')){
-        const json = decodeURIComponent(escape(atob(decodeURIComponent(hash.slice(3)))));
+        const decoded = atob(decodeURIComponent(hash.slice(3)));
+        const bytes = new Uint8Array(decoded.length);
+        for (let i = 0; i < decoded.length; i++) {
+          bytes[i] = decoded.charCodeAt(i);
+        }
+        const json = new TextDecoder().decode(bytes);
         const data = JSON.parse(json);
         if(Array.isArray(data.people) && Array.isArray(data.expenses)){
           state.people = data.people;
@@ -267,7 +272,8 @@
 
 
     el('shareUrl').addEventListener('click',()=>{
-      const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(JSON.stringify(state)))));
+      const jsonString = JSON.stringify(state);
+      const encoded = encodeURIComponent(btoa(new TextEncoder().encode(jsonString).reduce((data, byte) => data + String.fromCharCode(byte), '')));
       const url = location.origin + location.pathname + '#s=' + encoded;
       
       // クリップボードにコピーを試行
