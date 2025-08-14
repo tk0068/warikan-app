@@ -50,7 +50,7 @@
     try{
       const hash = location.hash;
       if(hash.startsWith('#s=')){
-        const json = atob(decodeURIComponent(hash.slice(3)));
+        const json = decodeURIComponent(escape(atob(decodeURIComponent(hash.slice(3)))));
         const data = JSON.parse(json);
         if(Array.isArray(data.people) && Array.isArray(data.expenses)){
           state.people = data.people;
