@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>割り勘アプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>割り勘アプリ</h1>
+    <div class="sub">参加者と支出を入力すると、合計・一人あたり・精算（誰が誰にいくら払うか）を自動計算します。データは<strong>ブラウザに一時保存</strong>されますが、ブラウザを閉じると削除されます。</div>
+
+    <div class="grid">
+      <!-- Left: Input -->
+      <div class="card">
+        <div class="section-title">1) 参加者</div>
+        <div class="row wrap" id="peoplePills"></div>
+        <div class="row" style="margin-top:10px">
+          <input id="newPerson" placeholder="参加者名（例: Aさん）" />
+          <button type="button" class="btn" id="addPersonBtn">追加</button>
+          <button type="button" class="btn ghost" id="resetPeopleBtn" title="参加者をA/B/Cにリセット">初期化</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <div class="section-title">2) 支出の登録</div>
+        <div class="mobile-stack">
+          <select id="payer"></select>
+          <input id="amount" type="number" inputmode="numeric" placeholder="金額" />
+          <input id="memo" placeholder="内訳（交通費など任意）" />
+        </div>
+        <div class="add-button" style="margin-top:12px;">
+          <button type="button" class="btn primary" id="addExpenseBtn">支出を追加</button>
+        </div>
+        <div class="list" id="expenseList"></div>
+
+        <div class="row wrap" style="gap:10px; margin-top:12px; align-items:center">
+          <button type="button" class="btn ghost" id="clearExpensesBtn">支出を全削除</button>
+        </div>
+
+        <div class="hr"></div>
+
+        <details>
+          <summary>データの保存／共有</summary>
+          <div class="row wrap" style="gap:8px; margin-top:8px">
+            <button type="button" class="btn" id="saveLocal">ローカル保存（localStorage）</button>
+            <button type="button" class="btn" id="loadLocal">復元</button>
+            <button type="button" class="btn danger" id="wipeLocal">保存データ削除</button>
+            <button type="button" class="btn" id="shareUrl">URLで共有（状態を埋め込み）</button>
+          </div>
+          <p class="muted" style="margin-top:10px">※ ローカル保存はこのブラウザだけに保存されます。別端末には同期されません。URL共有は状態をエンコードしたリンクを作ります（長くなる場合があります）。</p>
+        </details>
+
+      </div>
+
+      <!-- Right: Results -->
+      <div class="card">
+        <div class="section-title">集計</div>
+        <table class="table" id="summaryTable">
+          <thead><tr><th>項目</th><th class="right">金額</th></tr></thead>
+          <tbody>
+            <tr><td>合計</td><td class="right"><span id="total">0</span> 円</td></tr>
+            <tr><td>人数</td><td class="right"><span id="count">0</span> 人</td></tr>
+            <tr><td>一人あたり</td><td class="right"><span id="perHead">0</span> 円</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title" style="margin-top:14px">個別の負担・精算</div>
+        <table class="table" id="peopleTable">
+          <thead><tr><th>名前</th><th class="right">支払額</th><th class="right">差額（+受取 / -支払）</th></tr></thead>
+          <tbody id="peopleRows"></tbody>
+        </table>
+
+        <div class="section-title" style="margin-top:14px">支払い提案（誰が誰にいくら）</div>
+        <div id="settlements" class="list"></div>
+      </div>
+    </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
